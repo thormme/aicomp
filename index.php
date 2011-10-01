@@ -32,10 +32,10 @@ print xmlrpc_server_call_method($xmlrpc_server, $request_xml, array());
 	
 	$_SESSION['opphand'] = null;
 	
-	for ($i = 0; i < 20; i++)
+	for ($i = 0; $i < 20; $i++)
 	{
-		$_SESSION['opphand'][i]['low'] = 1;
-		$_SESSION['opphand'][i]['high'] = 80;
+		$_SESSION['opphand'][$i]['low'] = 1;
+		$_SESSION['opphand'][$i]['high'] = 80;
 	}
 	
 	$_SESSION['discardpile'] = null;
@@ -51,7 +51,7 @@ print xmlrpc_server_call_method($xmlrpc_server, $request_xml, array());
 		$enemyInfo = $args[0]['other_player_moves'];
 		
 		//switch the last discard card with the enemy's discard card
-		if (enemyInfo['move'] == "take_discard")
+		if ($enemyInfo['move'] == "take_discard")
 		{
 			//stores the discard card of the pile in the enemy rack
 			$_SESSION['opphand'][$enemyInfo['idx']]['low'] = $_SESSION['discardpile'][count($_SESSION['discardpile']) - 1];
@@ -62,7 +62,7 @@ print xmlrpc_server_call_method($xmlrpc_server, $request_xml, array());
 		}
 		
 		//add the enemy's discarded card to the discard pile
-		if (enemyInfo['move'] == "take_deck")
+		if ($enemyInfo['move'] == "take_deck")
 		{
 			//adds the new discard card
 			$_SESSION['discardpile'] = $args[0]['discard'];
@@ -71,7 +71,7 @@ print xmlrpc_server_call_method($xmlrpc_server, $request_xml, array());
  
  
 	$cardfitness = array();
-	for(int $card = 0; $card<count($args[0]->rack); $card++) {
+	for($card = 0; $card<count($args[0]->rack); $card++) {
 		$fcard = fitnessOnCard($args[0], $card);
 		$fdeck = fitnessOnDeck($args[0], $card);
 		$cardfitness[] = array( 
@@ -85,10 +85,18 @@ print xmlrpc_server_call_method($xmlrpc_server, $request_xml, array());
 			'move' => 'request_deck',		
 			);
 	}
+	usort($cardfitness, "fitnesscomp");
 	$returnResult = new Move_Result;
-	$returnResult->move = "";
-	$returnResult->idx = 0;
+	$returnResult->move = $cardfitness[0]->move;
+	$returnResult->idx = $cardfitness[0]->idx;
 	return $returnResult;
+}
+
+function fitnesscomp($a, $b) {
+	if ($a->fitness == $b->fitness) {
+        	return 0;
+    	}
+    	return ($a->fitness < $b->fitness) ? -1 : 1;
 }
 
 function fitnessOnCard($args, $card) {
