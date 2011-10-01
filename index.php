@@ -1,16 +1,20 @@
 <?php
-class XMLRPCServer {
+
+class XMLRPCServer 
+{
    
     private $serverHandler;
    
     private $externalFunctions;
    
-    public function __construct() {
+    public function __construct() 
+	{
         $this->serverHandler = xmlrpc_server_create();
         $this->externalFunctions = array();
     }
    
-    public function registerMethod($externalName, $function, $parameterNames) {
+    public function registerMethod($externalName, $function, $parameterNames) 
+	{
         if($function == null) $function = $externalName;
         xmlrpc_server_register_method($this->serverHandler, $externalName, array(&$this, 'callMethod'));
         $this->externalFunctions[$externalName] =
@@ -18,7 +22,8 @@ class XMLRPCServer {
                   'parameterNames' => $parameterNames);
     }
    
-    public function callMethod($functionName, $parametersFromRequest) {
+    public function callMethod($functionName, $parametersFromRequest) 
+	{
         $function = $this->externalFunctions[$functionName]['function'];
         $parameterNames = $this->externalFunctions[$functionName]['parameterNames'];
         $parameters = array();
@@ -28,7 +33,8 @@ class XMLRPCServer {
         return call_user_func_array($function, $parameters);
     }
    
-    public function computeAnswer() {
+    public function computeAnswer() 
+	{
         return xmlrpc_server_call_method($this->serverHandler, file_get_contents('php://input'), null);
     }
 }
@@ -41,11 +47,13 @@ header('Content-Type: text/xml');
 print($answer);
 
 
-class SomeXmlRPCServer{
+class SomeXmlRPCServer
+{
    
     private $xmlRPCServer;
    
-    public function __construct($xmlRPCServer) {
+    public function __construct($xmlRPCServer) 
+	{
         $this->xmlRPCServer = $xmlRPCServer;
         $this->xmlRPCServer->registerMethod('ping',array(&$this, 'pingInternal'),array('text'));
 		$this->xmlRPCServer->registerMethod('start_game',array(&$this, 'start_gameInternal'),array('sgStruct'));
@@ -55,36 +63,45 @@ class SomeXmlRPCServer{
 		$this->xmlRPCServer->registerMethod('game_result',array(&$this, 'game_resultInternal'),array('grStuct'));
     }
    
-    public function pingInternal($text) {
-        if($text == "ping") return "pong";
-		else return "pong";
+    public function pingInternal($text) 
+	{
+		$ourFileName = "testFile.txt";
+		$ourFileHandle = fopen($ourFileName, 'w') or die("can't open file");
+		fclose($ourFileHandle);
+		return "pong";
     }
 	
-	public function start_gameInternal($sgStruct) {
+	public function start_gameInternal($sgStruct) 
+	{
 		return "";
 	}
 	
-	public function get_moveInternal($gmStruct) {
+	public function get_moveInternal($gmStruct) 
+	{
 		$returnResult = new Move_Result;
 		$returnResult->move = "";
 		$returnResult->idx = 0;
 		return $returnResult;
 	}
 	
-	public function get_deck_exchangeInternal($gdeStuct) {
+	public function get_deck_exchangeInternal($gdeStuct) 
+	{
 		return 0;
 	}
 	
-	public function move_resultInternal($mrStruct) {
+	public function move_resultInternal($mrStruct) 
+	{
 		return "";
 	}
 	
-	public function game_resultInternal($grStuct) {
+	public function game_resultInternal($grStuct) 
+	{
 		return "";
 	}
 }
 
-class Move_Result{
+class Move_Result
+{
 	public $move;
 	public $idx;
 }
