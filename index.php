@@ -72,10 +72,10 @@ print xmlrpc_server_call_method($xmlrpc_server, $request_xml, array());
  
 	$cardfitness = array();
 	for(int $card = 0; $card<count($args[0]->rack); $card++) {
-		$fdisc = fitnessOnDiscard($args[0], $card);
+		$fcard = fitnessOnCard($args[0], $card);
 		$fdeck = fitnessOnDeck($args[0], $card);
 		$cardfitness[] = array( 
-			'fitness' => $fdisc,
+			'fitness' => $fcard,
 			'idx' => $card,
 			'move' => 'request_discard',		
 			);
@@ -91,7 +91,7 @@ print xmlrpc_server_call_method($xmlrpc_server, $request_xml, array());
 	return $returnResult;
 }
 
-function fitnessOnDiscard($args, $card) {
+function fitnessOnCard($args, $card) {
 	return 0;
 }
 
