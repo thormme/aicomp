@@ -65,11 +65,14 @@ class SomeXmlRPCServer{
 	}
 	
 	public function get_moveInternal($gmStruct) {
-		return "";
+		$returnResult = new Move_Result;
+		$returnResult->move = "";
+		$returnResult->idx = 0;
+		return $returnResult;
 	}
 	
 	public function get_deck_exchangeInternal($gdeStuct) {
-		return "";
+		return 0;
 	}
 	
 	public function move_resultInternal($mrStruct) {
@@ -79,5 +82,10 @@ class SomeXmlRPCServer{
 	public function game_resultInternal($grStuct) {
 		return "";
 	}
+}
+
+class Move_Result{
+	public $move;
+	public $idx;
 }
 ?>
