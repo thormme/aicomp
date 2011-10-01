@@ -30,10 +30,33 @@ print xmlrpc_server_call_method($xmlrpc_server, $request_xml, array());
 }
 
  function get_move($method_name, $args, $app_data) {
+	$cardfitness = array();
+	for(int $card = 0; $card<count($args[0]->rack); $card++) {
+		$fdisc = fitnessOnDiscard($args[0], $card);
+		$fdeck = fitnessOnDeck($args[0], $card);
+		$cardfitness[] = array( 
+			'fitness' => $fdisc,
+			'idx' => $card,
+			'move' => 'request_discard',		
+			);
+		$cardfitness[] = array( 
+			'fitness' => $fdeck,
+			'idx' => $card,
+			'move' => 'request_deck',		
+			);
+	}
 	$returnResult = new Move_Result;
 	$returnResult->move = "";
 	$returnResult->idx = 0;
 	return $returnResult;
+}
+
+function fitnessOnDiscard($args, $card) {
+	return 0;
+}
+
+function fitnessOnDeck($args, $card) {
+	return 0;
 }
 
  function get_deck_exchange($method_name, $args, $app_data) {
