@@ -47,16 +47,37 @@ class SomeXmlRPCServer{
    
     public function __construct($xmlRPCServer) {
         $this->xmlRPCServer = $xmlRPCServer;
-        $this->xmlRPCServer->registerMethod(
-            'ping',        // The name the XML-RPC Client calls
-            array(&$this, 'pingInternal'),    // Pointer to the method, can be a simple string if you have global functions
-            array('text')        // Name of the parameters and their ordering
-        );
+        $this->xmlRPCServer->registerMethod('ping',array(&$this, 'pingInternal'),array('text'));
+		$this->xmlRPCServer->registerMethod('start_game',array(&$this, 'start_gameInternal'),array('sgStruct'));
+		$this->xmlRPCServer->registerMethod('get_move',array(&$this, 'get_moveInternal'),array('gmStruct'));
+		$this->xmlRPCServer->registerMethod('get_deck_exchange',array(&$this, 'get_deck_exchangeInternal'),array('gdeStuct'));
+		$this->xmlRPCServer->registerMethod('move_result',array(&$this, 'move_resultInternal'),array('mrStruct'));
+		$this->xmlRPCServer->registerMethod('game_result',array(&$this, 'game_resultInternal'),array('grStuct'));
     }
    
     public function pingInternal($text) {
         if($text == "ping") return "pong";
 		else return "pong";
     }
+	
+	public function start_gameInternal($sgStruct) {
+		return "";
+	}
+	
+	public function get_moveInternal($gmStruct) {
+		return "";
+	}
+	
+	public function get_deck_exchangeInternal($gdeStuct) {
+		return "";
+	}
+	
+	public function move_resultInternal($mrStruct) {
+		return "";
+	}
+	
+	public function game_resultInternal($grStuct) {
+		return "";
+	}
 }
 ?>
