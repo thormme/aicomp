@@ -65,19 +65,29 @@ class SomeXmlRPCServer
    
     public function pingInternal($text) 
 	{
-		$ourFileName = "testFile.txt";
+		$ourFileName = "testFile.html";
 		$ourFileHandle = fopen($ourFileName, 'w') or die("can't open file");
+		fwrite($ourFileHandle, varDumpToString($text->parameterNames));
 		fclose($ourFileHandle);
+		
 		return "pong";
     }
 	
 	public function start_gameInternal($sgStruct) 
 	{
+		//file_put_contents("startgametestfile.html", varDumpToString($sgStruct));
+		
+		$ourFileName = "testFile2.html";
+		$ourFileHandle = fopen($ourFileName, 'w') or die("can't open file");
+		fwrite($ourFileHandle, $sgStruct[1]);
+		fclose($ourFileHandle);
+		
 		return "";
 	}
 	
 	public function get_moveInternal($gmStruct) 
 	{
+	
 		$returnResult = new Move_Result;
 		$returnResult->move = "";
 		$returnResult->idx = 0;
@@ -98,6 +108,16 @@ class SomeXmlRPCServer
 	{
 		return "";
 	}
+	
+	
+}
+
+function varDumpToString($var)
+{
+	ob_start();
+	var_dump($var);
+	$result = ob_get_clean();
+	return $result;
 }
 
 class Move_Result
@@ -105,4 +125,6 @@ class Move_Result
 	public $move;
 	public $idx;
 }
+
+
 ?>
