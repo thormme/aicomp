@@ -89,6 +89,20 @@ print xmlrpc_server_call_method($xmlrpc_server, $request_xml, array());
 	$returnResult = new Move_Result;
 	$returnResult->move = $cardfitness[0]->move;
 	$returnResult->idx = $cardfitness[0]->idx;
+	
+	//making sure the discard pile is correct
+	if ($returnResult->move == "request_deck")
+	{
+		//adds the new discard card
+		$_SESSION['discardpile'] = $args[0]['rack'][$returnResult->idx];
+	}
+	else if ($returnResult->move == "request_discard")
+	{
+		//replaces the old discard card with the new discard card
+		$_SESSION['discardpile'][count($_SESSION['discardpile']) - 1] = $args[0]['rack'][$returnResult->idx];
+	}
+	
+	
 	return $returnResult;
 }
 
