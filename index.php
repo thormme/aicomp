@@ -1,5 +1,8 @@
 <?php
 
+session_start();
+
+
 $request_xml = file_get_contents("php://input");
 
 $xmlrpc_server = xmlrpc_server_create();
@@ -25,7 +28,11 @@ print xmlrpc_server_call_method($xmlrpc_server, $request_xml, array());
 	$ourFileName = "testFile2.html";
 	$ourFileHandle = fopen($ourFileName, 'w') or die("can't open file");
 	fwrite($ourFileHandle, varDumpToString($args));
-	fclose($ourFileHandle);
+	fclose($ourFileHandle);	
+	
+	$_SESSION['discardpile'] = null;
+	$_SESSION['discardpile'] = $args[0]['initial_discard'];
+	
 	return "";
 }
 
