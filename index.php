@@ -30,6 +30,14 @@ print xmlrpc_server_call_method($xmlrpc_server, $request_xml, array());
 	fwrite($ourFileHandle, varDumpToString($args));
 	fclose($ourFileHandle);	
 	
+	$_SESSION['opphand'] = null;
+	
+	for ($i = 0; i < 20; i++)
+	{
+		$_SESSION['opphand'][i]['low'] = 1;
+		$_SESSION['opphand'][i]['high'] = 80;
+	}
+	
 	$_SESSION['discardpile'] = null;
 	$_SESSION['discardpile'] = $args[0]['initial_discard'];
 	
@@ -37,6 +45,31 @@ print xmlrpc_server_call_method($xmlrpc_server, $request_xml, array());
 }
 
  function get_move($method_name, $args, $app_data) {
+ 
+	if (count($args[0]['other_player_moves']) > 0)
+	{
+		$enemyInfo = $args[0]['other_player_moves'];
+		
+		//switch the last discard card with the enemy's discard card
+		if (enemyInfo['move'] == "take_discard")
+		{
+			//stores the discard card of the pile in the enemy rack
+			$_SESSION['opphand'][$enemyInfo['idx']]['low'] = $_SESSION['discardpile'][count($_SESSION['discardpile']) - 1];
+			$_SESSION['opphand'][$enemyInfo['idx']]['high'] = $_SESSION['discardpile'][count($_SESSION['discardpile']) - 1];
+			
+			//replaces the old discard card with the new discard card
+			$_SESSION['discardpile'][count($_SESSION['discardpile']) - 1] = $args[0]['discard'];
+		}
+		
+		//add the enemy's discarded card to the discard pile
+		if (enemyInfo['move'] == "take_deck")
+		{
+			//adds the new discard card
+			$_SESSION['discardpile'] = $args[0]['discard'];
+		}
+	}
+ 
+ 
 	$cardfitness = array();
 	for(int $card = 0; $card<count($args[0]->rack); $card++) {
 		$fdisc = fitnessOnDiscard($args[0], $card);
